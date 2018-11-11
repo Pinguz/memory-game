@@ -1,6 +1,31 @@
 /*
- * 创建一个包含所有卡片的数组
- */
+项目主要涉及内容：
+1. 注册点击事件，然后需要确定使用事件委托，在所有卡牌的父元素上设置监听器
+2. 然后，确保每次点击的事件仅对未打开的卡牌有效（排除已经匹配的和已经翻开的牌）
+3. 每次点击卡牌翻开卡牌（函数 displayCardSymbol），同时，将这张牌放入一个
+  表示当前打开的卡牌的数组 openCards（函数 addCardToOpenCards）
+4. 当openCards 中包含两张卡牌时，进行对比 * 如果卡牌相同，则匹配相关操作
+（函数 lockMatchedCard，在此函数中将匹配卡牌放入数组 matchedCards ，注
+  意检查 matchedCards 是否达到数量16，如果达到就赢了，显示隐藏的胜利信息 modal 窗口）
+   * 如果卡牌不同，则卡牌翻过去恢复隐藏状态（函数 hideCardSymbol）
+*/
+
+//设置变量
+const timer = document.getElementById('timer');
+const restartBtn = document.getElementsByClassName('restart');
+const deck =document.getElementsByClassName('deck');
+const card = document.getElementsByClassName('card');
+const moves =
+const movesText =
+const starOne
+const starTwo
+const totalMoves
+const totalStars
+const playAgainBtn
+const seconds
+const minutes
+
+// 创建一个包含所有卡片的数组
 let cards = ["fa-diamond", "fa-diamond", "fa-paper-plane-o", "fa-paper-plane-o", "fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt", "fa-cube", "fa-cube", "fa-leaf", "fa-leaf", "fa-bicycle", "fa-bicycle", "fa-bomb", "fa-bomb"];
 
 let openCard = [];
@@ -48,7 +73,7 @@ function findMatch(){
     startGame = true;
   //判断卡列表
     if (openCard.length === 2) {
-      if (openCard[0][0].classList[2]) === openCard[1][0].classList[2]{
+      if (openCard[0][0].classList[2] === openCard[1][0].classList[2]){
         openCard[0][0].classList.add("bounceIn","match");
         openCard[1][0].classList.add("bounceIn","match");
         $(openCard[0]).off('click');
