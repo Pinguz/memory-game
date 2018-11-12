@@ -14,34 +14,39 @@
 // const timer = document.getElementById('timer');
 const restartBtn = document.getElementsByClassName('restart');
 const deck =document.getElementsByClassName('deck');
-const card = document.getElementsByClassName('card');
-const moves = document.getElementsByClassName('moves');
+// const moves = document.getElementsByClassName('moves');
 const movesText = document.getElementById('movesText');
-const stars = document.querySelector('.fa-star');
-const starsList = document.querySelector('.stars li')
+const stars = document.querySelectorAll('.fa-star');
+const starsList = document.querySelectorAll('.stars li');
 const starOne = document.getElementById('starOne');
 const starTwo = document.getElementById('starTwo');
 const starThree = document.getElementById('starThree');
-const totalMoves = document.getElementById('total-moves');
+// const totalMoves = document.getElementById('total-moves');
 const totalStars = document.getElementById('total-stars');
 const playAgainBtn = document.getElementById('paly-again-btn');
-// const second = document.getElementsByClassName('seconds');
-const minute = document.getElementsByClassName('minutes');
+const second = document.getElementsByClassName('second');
+const minute = document.getElementsByClassName('minute');
 let matchedCard = document.getElementsByClassName('match');
 
 // 创建一个包含所有卡片的数组
+let card = document.getElementsByClassName('card');
 let cards = ["fa-diamond", "fa-diamond", "fa-paper-plane-o", "fa-paper-plane-o", "fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt", "fa-cube", "fa-cube", "fa-leaf", "fa-leaf", "fa-bicycle", "fa-bicycle", "fa-bomb", "fa-bomb"];
 
-let openedCards = [];
-// let moves = 0;
+var openedCards = [];
+let moves = 0;
+let counter = document.querySelector('.moves');
 let starts = 3;
 let matchFound = 0;
+let closeicon = document.querySelector('.close');
+let modal = document.getElementById('win-popup')
 // let startGame = false;
 
 /*
  * 显示页面上的卡片
  *   - 使用下面提供的 "shuffle" 方法对数组中的卡片进行洗牌
  *   - 循环遍历每张卡片，创建其 HTML
+ *
+ *
  *   - 将每张卡的 HTML 添加到页面
  */
 
@@ -172,7 +177,7 @@ function moveCounter(){
 }
 // 游戏计时器
 var second = 0;minute =0;hour = 0;
-var timer = document.querySelector(",timer");
+var timer = document.querySelector(".timer");
 var interval;
 function startTimer(){
   interval = setInterval(function(){
@@ -199,9 +204,9 @@ function congratulations() {
     // 显示星级
     var starRating = document.querySelector(".stars").innerHTML;
     // 显示成绩
-    document.getElementById("finalMove").innerHTML = moves;
-    document.getElementById("starRating").innerHTML = starRating;
-    document.getElementById("totalTime").innerHTML = finalTime;
+    document.getElementById("total-moves").innerHTML = moves;
+    document.getElementById("total-stars").innerHTML = starRating;
+    // document.getElementById("totalTime").innerHTML = finalTime;
 
     closeModal();
   };

@@ -81,9 +81,15 @@ h1 {
     font-size: 33px;
 }
 
-.deck .card.wrong {
+.deck .card.unmatched {
   background: :#ff5252;
 }
+
+.deck .card.disable {
+  pointer-events: none;
+  opacity: 0.9;
+}
+
 /*
  * Styles for the Score Panel
  */
@@ -198,7 +204,7 @@ h1 {
   transition: box-shadow 0.5s;
 }
 
-#plau-again-btn:hover {
+#play-again-btn:hover {
   box-shadow: 4px 4px 8px #6f6f6f;
   background-color: #9759e3;
   cursor: pointer;
