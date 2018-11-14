@@ -1,54 +1,212 @@
 /*
-项目主要涉及内容：
-1. 注册点击事件，然后需要确定使用事件委托，在所有卡牌的父元素上设置监听器
-2. 然后，确保每次点击的事件仅对未打开的卡牌有效（排除已经匹配的和已经翻开的牌）
-3. 每次点击卡牌翻开卡牌（函数 displayCardSymbol），同时，将这张牌放入一个
-  表示当前打开的卡牌的数组 openCards（函数 addCardToOpenCards）
-4. 当openCards 中包含两张卡牌时，进行对比 * 如果卡牌相同，则匹配相关操作
-（函数 lockMatchedCard，在此函数中将匹配卡牌放入数组 matchedCards ，注
-  意检查 matchedCards 是否达到数量16，如果达到就赢了，显示隐藏的胜利信息 modal 窗口）
-   * 如果卡牌不同，则卡牌翻过去恢复隐藏状态（函数 hideCardSymbol）
-*/
-
-//设置变量
-// const timer = document.getElementById('timer');
-const restartBtn = document.getElementsByClassName('restart');
-const deck =document.getElementsByClassName('deck');
-// const moves = document.getElementsByClassName('moves');
-const movesText = document.getElementById('movesText');
-const stars = document.querySelectorAll('.fa-star');
-const starsList = document.querySelectorAll('.stars li');
-const starOne = document.getElementById('starOne');
-const starTwo = document.getElementById('starTwo');
-const starThree = document.getElementById('starThree');
-// const totalMoves = document.getElementById('total-moves');
-const totalStars = document.getElementById('total-stars');
-const playAgainBtn = document.getElementById('paly-again-btn');
-const second = document.getElementsByClassName('second');
-const minute = document.getElementsByClassName('minute');
-let matchedCard = document.getElementsByClassName('match');
-
-// 创建一个包含所有卡片的数组
-let card = document.getElementsByClassName('card');
-let cards = ["fa-diamond", "fa-diamond", "fa-paper-plane-o", "fa-paper-plane-o", "fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt", "fa-cube", "fa-cube", "fa-leaf", "fa-leaf", "fa-bicycle", "fa-bicycle", "fa-bomb", "fa-bomb"];
-
-var openedCards = [];
-let moves = 0;
-let counter = document.querySelector('.moves');
-let starts = 3;
-let matchFound = 0;
-let closeicon = document.querySelector('.close');
-let modal = document.getElementById('win-popup')
-// let startGame = false;
-
-/*
- * 显示页面上的卡片
- *   - 使用下面提供的 "shuffle" 方法对数组中的卡片进行洗牌
- *   - 循环遍历每张卡片，创建其 HTML
- *
- *
- *   - 将每张卡的 HTML 添加到页面
+ * 创建一个包含所有卡片的数组
  */
+ /*
+  * 显示页面上的卡片
+  *   - 使用下面提供的 "shuffle" 方法对数组中的卡片进行洗牌
+  *   - 循环遍历每张卡片，创建其 HTML
+  *   - 将每张卡的 HTML 添加到页面
+  */
+const cardIcons = [
+  "fa-diamond",
+  "fa-paper-plane-o",
+  "fa-anchor",
+  "fa-bolt",
+  "fa-cube",
+  "fa-anchor",
+  "fa-leaf",
+  "fa-bicycle",
+  "fa-diamond",
+  "fa-bomb",
+  "fa-leaf",
+  "fa-bomb",
+  "fa-bolt",
+  "fa-bicycle",
+  "fa-paper-plane-o",
+  "fa-cube"
+];
+
+// 设置元素
+const deck = document.getElementsByClassName("deck")[0];
+const stars = document.getElementsByClassName("stars")[0];
+const moves = document.getElementsByClassName("moves")[0];
+const gameTime = document.getElementsByClassName("game-time")[0];
+const restartBtn = document.getElementsByClassName("restart")[0];
+const modal = document.getElementsByClassName("modal")[0];
+const successMessage = document.getElementsByClassName("success-sub-msg")[0];
+const playAgain = document.getElementsByClassName("play-again")[0];
+const close = document.getElementsByClassName('close');
+
+// 初始化变量
+let openCards = [];
+let moveCounter = 0;
+let message = "";
+let starNum = 3;
+let starResultHtml = "";
+let startDate = null;
+let finalTime = 0;
+let timerID = null;
+let firstClick = true;
+let matchedCards = 0;
+
+// 构造函数
+function initialize(){
+  document.addEventListener("DOMContentLoaded",function(){
+    resetGame();
+    events();
+  });
+}
+// 设置页面点击事件
+function events(){
+  // 事件委托
+  deck.addEventListener("click", function(e) {
+    // 浏览器兼容
+    let event = e || window.event;
+    let target = event.target || event.srcElement;
+    if (
+      target.nodeName.toLocaleLowerCase() === "li" &&
+      !hasClass(target,"open")
+    ) {
+      if (firstClick) {
+        // 计时器
+        startDate = new Date();
+        timerID = setInterval(function() {
+          finalTime = Math.round((new Date() - startDate) / 1000);
+          gameTime.innerHTML = finalTime;
+        }, 1000);
+
+        firstClick = false;
+      }
+      // DOM操作
+      displayCardSymbol(target);
+      addCardToOpenCards(target);
+      if (openCards.length === 2) {
+        showMoveCounter();
+        openCards[0].innerHTML === openCards[1].innerHTML
+          ? lockMatchedCard()
+          : hideCardSymbol();
+      }
+    }
+  });
+  // 重置事件
+  restartBtn.addEventListener("click", function() {
+    resetGame();
+  });
+
+  playAgain.addEventListener("click", function() {
+    modal.classList = "modal";
+    resetGame();
+  });
+
+  close.addEventListener("click",function(){
+    resetGame();
+  });
+}
+
+// 重置游戏数据
+function resetGame() {
+  clearInterval(timerID);
+  openCards = [];
+  matchedCards = 0;
+  moveCounter = 0;
+  message = "";
+  starNum = 3;
+  startDate = null;
+  finalTime = 0;
+  timerID = null;
+  firstClick = true;
+  starResultHtml = "";
+  moves.innerHTML = "0";
+  deck.innerHTML = "";
+  stars.innerHTML =
+    '<li><i class="fa fa-star"></i></li> <li><i class="fa fa-star"></i></li> <li><i class="fa fa-star"></i></li>';
+  successMessage.innerHTML = "With #{move} moves in #{time} seconds #{stars}.";
+  gameTime.innerHTML = "0";
+  shuffleCards(cardIcons);
+}
+// 洗牌 这个地方不太懂，
+function shuffleCards(arr) {
+  //打乱数组
+  shuffle(arr);
+  let str = "";
+  for (let i = 0; i < arr.length; i++) {
+    str = str + `<li class="card"><i class="fa ${arr[i]}"></i></li>\n`;
+  }
+  deck.insertAdjacentHTML("afterbegin",str);
+}
+// 显示移动步数
+function showMoveCounter() {
+  moves.innerHTML = "";
+  moveCounter++;
+
+  if (moveCounter > 10 && moveCounter < 18) {
+    starNum = 2;
+    stars.innerHTML = `<li><i class="fa fa-star"></i></li>
+                      <li><i class="fa fa-star"></i></li>` ;
+  } else if (moveCounter >= 18) {
+    starNum = 1;
+    stars.innerHTML = `<li><i class="fa fa-star"></i></li>`;
+  } else {
+    starNum = 3;
+  }
+  moves.insertAdjacentHTML("afterbegin",moveCounter);
+}
+function displayCardSymbol(el) {
+  el.classList += " open show animated flipInY";
+}
+function addCardToOpenCards(el) {
+  openCards.push(el);
+}
+function hideCardSymbol() {
+  openCards.forEach(function(card) {
+    card.classList = "card open show error animated shake";
+    setTimeout(function() {
+      card.className = "card";
+    },1000);
+  });
+  openCards = [];
+}
+
+// 如果卡牌匹配成功
+function lockMatchedCard() {
+  openCards.forEach(function(card) {
+    card.classList = "card open match animated bounceIn";
+  });
+  matchedCards = matchedCards + 2;
+  isWin();
+  openCards = [];
+}
+function isWin() {
+  if (matchedCards === 16) {
+    setTimeout(function() {
+      alertMessage();
+    },500);
+  }
+}
+// 成功弹窗
+function alertMessage() {
+  if (starNum === 3) {
+    starResultHtml = `<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>`;
+  } else if (starNum === 2) {
+    starResultHtml = `<i class="fa fa-star"></i><i class="fa fa-star"></i>`;
+  } else if (starNum === 1) {
+    starResultHtml = `<i class="fa fa-star"></i>`;
+  }
+  modal.className += " active";
+  message = successMessage.textContent.replace("#{move}",moveCounter);
+  message = message.replace("#{stars}", starResultHtml);
+  message = message.replace("#{time}", finalTime);
+  successMessage.innerHTML = "";
+  successMessage.insertAdjacentHTML("afterbegin", message);
+}
+// 不懂这个函数的意思！
+function hasClass(el, classList) {
+  if (el.classList) {
+    return el.classList.contains(classList);
+  } else {
+    return new RegExp("(^| )" + classList + "( |$)", "gi").test(el.classList);
+  }
+}
 
 // 洗牌函数来自于 http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -64,172 +222,9 @@ function shuffle(array) {
 
     return array;
 }
-// 当页面刷新时洗牌
-document.body.onload = startGame();
 
-function startGame(){
-  cards = shuffle(cards);
-  for (var i = 0; i < cards.length; i++){
-    deck.innerHTML = "";
-    [].forEach.call(cards, function(item) {
-      deck.appendChild(item);
-    });
-    cards[i].classList.remove("show","open","match","disable");
-  }
-  // 重置步数
-  moves = 0;
-  counter.innerHTML = moves;
-  for (var i = 0; i < stars.length; i++){
-    stars[i].style.color = "#{FFD700}";
-    stars[i].style.visibility = "visible";
-  }
-  // 重置事件
-  second = 0;
-  minute = 0;
-  hour = 0;
-  var timer = document.querySelector(".timer");
-  timer.innerHTML = "0 mins o secs";
-  clearInterval(interval);
-}
+initialize();
 
-// 切换打开跟显示卡片的类型
-var displayCard = function (){
-  this.classList.toggle("open");
-  this.classList.toggle("show");
-  this.classList.toggle("disabled");
-};
-
-// 将卡片与已翻开卡片进行对比判断是否同类型
-function cardOpen() {
-  openedCards.push(this);
-  var len = openedCards.length;
-  if( len === 2){
-    moveCounter();
-    if(openedCards[0].type === openedCards[1].type){
-      matched();
-    } else {
-      unmatched();
-    }
-  }
-};
-
-// 卡片匹配时
-function matched(){
-  openedCards[0].classList.add("match","disabled");
-  openedCards[1].classList.add("match","disabled");
-  openedCards[0].classList.remove("show","open","no-event");
-  openedCards[1].classList.remove("show","open","no-event");
-  openedCards = [];
-}
-// 卡片不匹配时
-function unmatched(){
-  openedCards[0].classList.add("unmatched");
-  openedCards[1].classList.add("unmatched");
-  disable();
-  setTimeout(function(){
-    openedCards[0].classList.remove("show","open","no-event","unmatched");
-    openedCards[1].classList.remove("show","open","no-event","unmatched");
-    enable();
-    openedCards = [];
-  },1100);
-}
-// 暂时禁用卡片
-function disable(){
-  Array.prototype.filter.call(cards, function(card){
-    card.classList.add("disabled");
-  });
-}
-// 启用卡和禁用匹配卡
-function enable(){
-  Array.prototype.filter.call(cards, function(card){
-    card.classList.remove("disabled");
-    for(var i = 0; i < matchedCard.length; i++){
-      matchedCard[i].classList.add("disabled");
-    }
-  });
-}
-// 计算用户步数
-function moveCounter(){
-  moves++;
-  counter.innerHTML = moves;
-  // 第一次点击后开始
-  if(moves == 1){
-    second = 0;
-    minute = 0;
-    hour = 0;
-    startTimer();
-  }
-  // 根据步数设定星级
-  if(moves > 8 && moves < 12){
-    for( i = 0; i < 3; i++){
-      if(i > 1){
-        stars[i].stytle.visibility = "collapse";
-      }
-    }
-  }
-  else if (move > 13){
-    for( i = 0; i < 3; i++){
-      if(i > 0){
-        stars[1].style.visibility = "collapse";
-      }
-    }
-  }
-}
-// 游戏计时器
-var second = 0;minute =0;hour = 0;
-var timer = document.querySelector(".timer");
-var interval;
-function startTimer(){
-  interval = setInterval(function(){
-    timer.innerHTML = minute+"mins "+second+"secs";
-    second++;
-    if(second == 60){
-      minute++;
-      second=0;
-    }
-    if(minute == 60){
-      hour++;
-      minute = 0;
-    }
-  },1000);
-}
-
-//当游戏完成时显示弹层
-function congratulations() {
-  if (matchedCard.length == 16){
-    clearInterval(interval);
-    finalTime = timer.innerHTML;
-    // 显示卡片
-    modal.classList.add("show");
-    // 显示星级
-    var starRating = document.querySelector(".stars").innerHTML;
-    // 显示成绩
-    document.getElementById("total-moves").innerHTML = moves;
-    document.getElementById("total-stars").innerHTML = starRating;
-    // document.getElementById("totalTime").innerHTML = finalTime;
-
-    closeModal();
-  };
-}
-// 关闭按钮
-function closeModal() {
-  closeicon.addEventListener("click",function(e){
-    modal.classList.remove("show");
-    startGame();
-  });
-}
-// 重新开始
-function playAgain(){
-  modal.classList.remove("show");
-  startGame();
-}
-// 给卡片添加监听事件
-for (var i = 0; i < cards.length; i++){
-  card = cards[i];
-  card.addEventListener("click",displayCard);
-  card.addEventListener("click",cardOpen);
-  card.addEventListener("click",congratulations);
-};
 /*
  * 设置一张卡片的事件监听器。 如果该卡片被点击：
  *  - 显示卡片的符号（将这个功能放在你从这个函数中调用的另一个函数中）

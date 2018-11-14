@@ -2,35 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Matching Game</title>
     <meta name="description" content="">
     <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/animate.css">
 </head>
 <body>
-<!-- 主体部分 -->
+
     <div class="container">
         <header>
             <h1>Matching Game</h1>
         </header>
-
+        <!-- 分数&操作区 -->
         <section class="score-panel">
-          <div class="star-rating">
-        	   <ul class="stars">
-        		  <li><i class="fa fa-star" id="starThree"></i></li>
-        		  <li><i class="fa fa-star" id="starTwo"></i></li>
-          		<li><i class="fa fa-star" id="starOne"></i></li>
-          	 </ul>
-        	   <span class="moves" id="moves">0</span><span id="movesText"> Moves</span>
-          </div>
-          <div class="timer"><span id="timer-text">Timer:</span>
-            <lable class="minute">00</lable>:<lable class="second">00</lable></div>
-          <div class="restart">
-        		<i class="fa fa-repeat"></i><span id="restart-text">  Restart</span>
-        	</div>
-        </section>
+        	<ul class="stars">
+        		<li><i class="fa fa-star"></i></li>
+        		<li><i class="fa fa-star"></i></li>
+        		<li><i class="fa fa-star"></i></li>
+        	</ul>
 
+        	<span class="moves">0</span> Moves
+
+          <div class="timer">
+            <i class="fa fa-clock-o"></i>
+            <span class="game-time">0</span> s
+          </div>
+
+          <div class="restart">
+            <span > Restart: </span><i class="fa fa-repeat" id="restart-text"></i>
+          </div>
+
+        </section>
+        <!-- 卡牌区域 -->
         <ul class="deck">
             <li class="card">
                 <i class="fa fa-diamond"></i>
@@ -39,10 +45,10 @@
                 <i class="fa fa-paper-plane-o"></i>
             </li>
             <li class="card match">
-                <i class="fa fa-paper-plane-o"></i>
+                <i class="fa fa-anchor"></i>
             </li>
             <li class="card">
-                <i class="fa fa-paper-plane-o"></i>
+                <i class="fa fa-bolt"></i>
             </li>
             <li class="card">
                 <i class="fa fa-cube"></i>
@@ -57,7 +63,7 @@
                 <i class="fa fa-bicycle"></i>
             </li>
             <li class="card">
-                <i class="fa fa-bicycle"></i>
+                <i class="fa fa-diamond"></i>
             </li>
             <li class="card">
                 <i class="fa fa-bomb"></i>
@@ -81,19 +87,19 @@
                 <i class="fa fa-cube"></i>
             </li>
         </ul>
-    </div>
-<!-- 弹窗 -->
-    <div id="win-popup" class="popup zoomIn">
-      <div class="popup-content">
-        <span class="close">&times;</span>
-        <h1>CONGRATULATIONS!</h1>
-        <h3>You completed the game in <span class="minute">0</spam> minutes and <span class="second">0</span> seconds.</h3>
-        <h3>Total moves: <span id="total-moves">0</span><span id="star-rating-text"> Star Rating: </span><span id="total-stars">0</span> out of 3</h3>
-        <button type="button" class="button" id="play-again-btn">
-          PLAY AGAIN!
-        </button>
+        <!-- 成功弹层 -->
+        <div class="modal">
+          <div class="modal-window">
+            <div class="modal-body">
+              <!-- <i class="fa fa-check fa-2x" aria-hidden="true"></i> -->
+              <span class="close">&times;</span>
+              <h1>CONGRATULTIONS YOU WIN !</h1>
+              <p class="success-sub-msg">Wiht #{move} moves in #{time} seconds.</p>
+              <span class="play-again">PLAY AGAIN！</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
     <script src="js/app.js"></script>
 </body>
