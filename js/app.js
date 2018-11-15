@@ -35,7 +35,7 @@ const restartBtn = document.getElementsByClassName("restart")[0];
 const modal = document.getElementsByClassName("modal")[0];
 const successMessage = document.getElementsByClassName("success-sub-msg")[0];
 const playAgain = document.getElementsByClassName("play-again")[0];
-const close = document.getElementsByClassName('close');
+
 
 // 初始化变量
 let openCards = [];
@@ -48,6 +48,7 @@ let finalTime = 0;
 let timerID = null;
 let firstClick = true;
 let matchedCards = 0;
+let closeicon = document.getElementsByClassName('close')[0];
 
 // 构造函数
 function initialize(){
@@ -97,11 +98,21 @@ function events(){
     modal.classList = "modal";
     resetGame();
   });
-
-  close.addEventListener("click",function(){
-    resetGame();
-  });
+  // 关闭按钮
+  closeicon.onclick = function() {
+      modal.style.display = "none";
+      resetGame();
+  };
 }
+
+
+/*function closeModal(){
+    closeicon.addEventListener("click", function(e){
+        modal.classList.remove("show");
+        startGame();
+    });
+}
+*/
 
 // 重置游戏数据
 function resetGame() {
@@ -183,6 +194,7 @@ function isWin() {
     },500);
   }
 }
+
 // 成功弹窗
 function alertMessage() {
   if (starNum === 3) {
