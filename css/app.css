@@ -17,8 +17,8 @@ body {
 }
 
 body {
-    background: #ffffff url('../img/geometry2.png'); /* Background pattern from Subtle Patterns */
-    font-family: 'Coda', cursive;
+    background: #fff url(../img/geometry2.png); /* Background pattern from Subtle Patterns */
+    font-family: "Coda", cursive;
     color: #4d4d4d;
 }
 
@@ -31,12 +31,14 @@ body {
 }
 
 h1 {
-    font-family: 'Arial', sans-serif;
+    font-family: "Arial", sans-serif;
 }
+
 h2 {
-    font-family: 'Arial', sans-serif;
+    font-family: "Arial", sans-serif;
     color: #18bf8f;
 }
+
 /*
  * Styles for the deck of cards
  */
@@ -73,6 +75,7 @@ h2 {
     transform: rotateY(0);
     background: #02b3e4;
     cursor: default;
+    font-size: 33px;
 }
 
 .deck .card.show {
@@ -125,7 +128,24 @@ h2 {
 #restart-text {
   color: green;
 }
+
 /* 弹层样式 */
+.modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+}
+
+.active {
+  visibility: visible !important;
+  opacity: 100 !important;
+}
+
 .modal-bg,
 .modal-window {
   text-align: center;
@@ -134,12 +154,14 @@ h2 {
   bottom: 0;
   transition: all 0.5s ease-in-out;
 }
+
 .modal-bg {
   right: 0;
   left: 0;
   z-index: -1;
-  background-color: rgba(0,0,0,0.4);
+  /* background-color: rgba(0,0,0,0.4); */
 }
+
 .modal-window {
   display: flex;
   justify-content: center;
@@ -150,11 +172,12 @@ h2 {
   height: 100%;
   min-height: 150px;
   margin-left: -20vw;
-  background-color: #000000cc;
+  /* background-color: #000000cc; */
   padding: 40px;
   z-index: 20;
   transform: translateY(-100vh);
 }
+
 .modal-body {
   background-color: white;
   padding: 10px 40px 60px 40px;
@@ -165,10 +188,11 @@ h2 {
     padding-bottom: 20px;
 }
 
-.active .modal-bg{
+.active .modal-bg {
   opacity: 1;
   z-index: 10;
 }
+
 .active .modal-window {
   transform: translateY(0);
 }
@@ -206,6 +230,7 @@ h2 {
   justify-content: space-around;
   align-items: center;
 }
+
 .play-again {
   color: #fff;
   width: 150px;
@@ -218,17 +243,20 @@ h2 {
   box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
   cursor: pointer;
 }
+
 .play-again:hover {
   box-shadow: 0 8px 6px -6px rgba(46, 61, 73, 0.5);
 }
 
 /* 关闭按钮 */
+
 .close {
   color: #aaaaaa;
   float: right;
   font-size: 32px;
   font-weight: bold;
 }
+
 .close:hover,
 .close:focus {
   color: #000;
@@ -247,7 +275,7 @@ h2 {
     width: 60px;
   }
   .deck .card.show {
-    font-size: 16px;
+    font-size: 28px;
   }
   .score-panel {
     width: 320px;

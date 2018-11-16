@@ -1,12 +1,16 @@
 /*
- * 创建一个包含所有卡片的数组
+参考思路：
+项目主要涉及内容：
+1. 注册点击事件，然后需要确定使用事件委托，在所有卡牌的父元素上设置监听器
+2. 然后，确保每次点击的事件仅对未打开的卡牌有效（排除已经匹配的和已经翻开的牌）
+3. 每次点击卡牌翻开卡牌（函数 displayCardSymbol），同时，将这张牌放入一个
+  表示当前打开的卡牌的数组 openCards（函数 addCardToOpenCards）
+4. 当openCards 中包含两张卡牌时，进行对比 * 如果卡牌相同，则匹配相关操作
+（函数 lockMatchedCard，在此函数中将匹配卡牌放入数组 matchedCards ，注
+  意检查 matchedCards 是否达到数量16，如果达到就赢了，显示隐藏的胜利信息 modal 窗口）
+   * 如果卡牌不同，则卡牌翻过去恢复隐藏状态（函数 hideCardSymbol）
  */
- /*
-  * 显示页面上的卡片
-  *   - 使用下面提供的 "shuffle" 方法对数组中的卡片进行洗牌
-  *   - 循环遍历每张卡片，创建其 HTML
-  *   - 将每张卡的 HTML 添加到页面
-  */
+
 const cardIcons = [
   "fa-diamond",
   "fa-paper-plane-o",
@@ -38,6 +42,7 @@ const playAgain = document.getElementsByClassName("play-again")[0];
 
 
 // 初始化变量
+
 let openCards = [];
 let moveCounter = 0;
 let message = "";
@@ -50,7 +55,8 @@ let firstClick = true;
 let matchedCards = 0;
 let closeicon = document.getElementsByClassName('close')[0];
 
-// 构造函数
+// 初始化页面
+
 function initialize(){
   document.addEventListener("DOMContentLoaded",function(){
     resetGame();
@@ -58,6 +64,7 @@ function initialize(){
   });
 }
 // 设置页面点击事件
+
 function events(){
   // 事件委托
   deck.addEventListener("click", function(e) {
@@ -100,21 +107,13 @@ function events(){
   });
   // 关闭按钮
   closeicon.onclick = function() {
-      modal.style.display = "none";
-      resetGame();
+    modal.style.display = "none";
+    resetGame();
   };
 }
 
-
-/*function closeModal(){
-    closeicon.addEventListener("click", function(e){
-        modal.classList.remove("show");
-        startGame();
-    });
-}
-*/
-
 // 重置游戏数据
+
 function resetGame() {
   clearInterval(timerID);
   openCards = [];
@@ -135,7 +134,9 @@ function resetGame() {
   gameTime.innerHTML = "0";
   shuffleCards(cardIcons);
 }
-// 洗牌 这个地方不太懂，
+
+// 洗牌函数
+
 function shuffleCards(arr) {
   //打乱数组
   shuffle(arr);
@@ -162,12 +163,15 @@ function showMoveCounter() {
   }
   moves.insertAdjacentHTML("afterbegin",moveCounter);
 }
+
 function displayCardSymbol(el) {
   el.classList += " open show animated flipInY";
 }
+
 function addCardToOpenCards(el) {
   openCards.push(el);
 }
+
 function hideCardSymbol() {
   openCards.forEach(function(card) {
     card.classList = "card open show error animated shake";
@@ -179,6 +183,7 @@ function hideCardSymbol() {
 }
 
 // 如果卡牌匹配成功
+
 function lockMatchedCard() {
   openCards.forEach(function(card) {
     card.classList = "card open match animated bounceIn";
@@ -196,6 +201,7 @@ function isWin() {
 }
 
 // 成功弹窗
+
 function alertMessage() {
   if (starNum === 3) {
     starResultHtml = `<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>`;
@@ -211,7 +217,9 @@ function alertMessage() {
   successMessage.innerHTML = "";
   successMessage.insertAdjacentHTML("afterbegin", message);
 }
-// 不懂这个函数的意思！
+
+// 是否包含某个类别
+
 function hasClass(el, classList) {
   if (el.classList) {
     return el.classList.contains(classList);
@@ -221,6 +229,7 @@ function hasClass(el, classList) {
 }
 
 // 洗牌函数来自于 http://stackoverflow.com/a/2450976
+
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
