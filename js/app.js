@@ -96,10 +96,17 @@ function events(){
       }
     }
   });
+
   // 重置事件
+  
+  /*
   restartBtn.addEventListener("click", function() {
     resetGame();
   });
+  简化写法
+  */
+
+  restartBtn.onclick = resetGame;
 
   playAgain.addEventListener("click", function() {
     modal.classList = "modal";
