@@ -107,7 +107,8 @@ function events(){
   });
   // 关闭按钮
   closeicon.onclick = function() {
-    modal.style.display = "none";
+    // modal.style.display = "none";尽量不要使用style样式，因为它的优先级高于一切
+    modal.classList = "modal";
     resetGame();
   };
 }
